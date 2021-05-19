@@ -159,5 +159,5 @@ static char *ngx_http_protect_request(ngx_conf_t *cf, ngx_command_t *cmd, void *
     }
     arcf->uri = value[1];
 
-    return NGX_CONF_OK;
+    return NGX_CONF_ERROR;
 } /* ngx_http_hello_world */
