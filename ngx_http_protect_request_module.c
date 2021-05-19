@@ -1,13 +1,11 @@
 /**
- * @file   ngx_http_hello_world_module.c
- * @author António P. P. Almeida <appa@perusio.net>
- * @date   Wed Aug 17 12:06:52 2011
- *
- * @brief  A hello world module for Nginx.
+ * @file   ngx_http_protect_request_module.c
+ * @author Tien Nguyen <nguyenvantien2009@gmail.com>
+ * @date   19/05/2021
  *
  * @section LICENSE
  *
- * Copyright (C) 2011 by Dominic Fallows, António P. P. Almeida <appa@perusio.net>
+ * Copyright (C) 2021 by Tien Nguyen, Nguyen Van Tien <nguyenvantien2009@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,18 +32,18 @@
 #define HELLO_WORLD "hello world\r\n"
 
 static char *ngx_http_hello_world(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-static ngx_int_t ngx_http_hello_world_handler(ngx_http_request_t *r);
+static ngx_int_t ngx_http_protect_request_handler(ngx_http_request_t *r);
 
 /**
- * This module provided directive: hello world.
+ * This module provided directive `protect_request`.
  *
  */
-static ngx_command_t ngx_http_hello_world_commands[] = {
+static ngx_command_t ngx_http_protect_request_commands[] = {
 
-    { ngx_string("hello_world"), /* directive */
+    { ngx_string("protect_request"), /* directive */
       NGX_HTTP_LOC_CONF|NGX_CONF_NOARGS, /* location context and takes
                                             no arguments*/
-      ngx_http_hello_world, /* configuration setup function */
+      ngx_http_protect_request, /* configuration setup function */
       0, /* No offset. Only one context is supported. */
       0, /* No offset when storing the module configuration on struct. */
       NULL},
@@ -57,7 +55,7 @@ static ngx_command_t ngx_http_hello_world_commands[] = {
 static u_char ngx_hello_world[] = HELLO_WORLD;
 
 /* The module context. */
-static ngx_http_module_t ngx_http_hello_world_module_ctx = {
+static ngx_http_module_t ngx_http_protect_request_module_ctx = {
     NULL, /* preconfiguration */
     NULL, /* postconfiguration */
 
@@ -72,10 +70,10 @@ static ngx_http_module_t ngx_http_hello_world_module_ctx = {
 };
 
 /* Module definition. */
-ngx_module_t ngx_http_hello_world_module = {
+ngx_module_t ngx_http_protect_request_module = {
     NGX_MODULE_V1,
-    &ngx_http_hello_world_module_ctx, /* module context */
-    ngx_http_hello_world_commands, /* module directives */
+    &ngx_http_protect_request_module_ctx, /* module context */
+    ngx_http_protect_request_commands, /* module directives */
     NGX_HTTP_MODULE, /* module type */
     NULL, /* init master */
     NULL, /* init module */
@@ -95,36 +93,58 @@ ngx_module_t ngx_http_hello_world_module = {
  * @return
  *   The status of the response generation.
  */
-static ngx_int_t ngx_http_hello_world_handler(ngx_http_request_t *r)
-{
-    ngx_buf_t *b;
-    ngx_chain_t out;
+static ngx_int_t ngx_http_protect_request_handler(ngx_http_request_t *r) {
 
-    /* Set the Content-Type header. */
-    r->headers_out.content_type.len = sizeof("text/plain") - 1;
-    r->headers_out.content_type.data = (u_char *) "text/plain";
+    ngx_http_protect_request_conf_t  *arcf;
 
-    /* Allocate a new buffer for sending out the reply. */
-    b = ngx_pcalloc(r->pool, sizeof(ngx_buf_t));
+    arcf = ngx_http_get_module_loc_conf(r, ngx_http_protect_request_module);
 
-    /* Insertion in the buffer chain. */
-    out.buf = b;
-    out.next = NULL; /* just one buffer */
+    // validate request
+    if (arcf->uri.len == 0) {
+        return NGX_DECLINED;
+    }
 
-    b->pos = ngx_hello_world; /* first position in memory of the data */
-    b->last = ngx_hello_world + sizeof(ngx_hello_world) - 1; /* last position in memory of the data */
-    b->memory = 1; /* content is in read-only memory */
-    b->last_buf = 1; /* there will be no more buffers in the request */
+    ctx = ngx_http_get_module_ctx(r, ngx_http_protect_request_module);
+    
 
-    /* Sending the headers for the reply. */
-    r->headers_out.status = NGX_HTTP_OK; /* 200 status code */
-    /* Get the content length of the body. */
-    r->headers_out.content_length_n = sizeof(ngx_hello_world) - 1;
-    ngx_http_send_header(r); /* Send the headers */
+    // add request header
+     
+    // send request as proxy
+    
+    // process response
+    if (ctx->status >= NGX_HTTP_OK && ctx->status < NGX_HTTP_SPECIAL_RESPONSE) {
+        return NGX_OK;
+    }
+    
 
-    /* Send the body, and return the status code of the output filter chain. */
-    return ngx_http_output_filter(r, &out);
-} /* ngx_http_hello_world_handler */
+    // ngx_buf_t *b;
+    // ngx_chain_t out;
+
+    // /* Set the Content-Type header. */
+    // r->headers_out.content_type.len = sizeof("text/plain") - 1;
+    // r->headers_out.content_type.data = (u_char *) "text/plain";
+
+    // /* Allocate a new buffer for sending out the reply. */
+    // b = ngx_pcalloc(r->pool, sizeof(ngx_buf_t));
+
+    // /* Insertion in the buffer chain. */
+    // out.buf = b;
+    // out.next = NULL; /* just one buffer */
+
+    // b->pos = ngx_hello_world; /* first position in memory of the data */
+    // b->last = ngx_hello_world + sizeof(ngx_hello_world) - 1;  last position in memory of the data 
+    // b->memory = 1; /* content is in read-only memory */
+    // b->last_buf = 1; /* there will be no more buffers in the request */
+
+    // /* Sending the headers for the reply. */
+    // r->headers_out.status = NGX_HTTP_OK; /* 200 status code */
+    // /* Get the content length of the body. */
+    // r->headers_out.content_length_n = sizeof(ngx_hello_world) - 1;
+    // ngx_http_send_header(r); /* Send the headers */
+
+    // /* Send the body, and return the status code of the output filter chain. */
+    // return ngx_http_output_filter(r, &out);
+} /* ngx_http_protect_request_handler */
 
 /**
  * Configuration setup function that installs the content handler.
@@ -138,13 +158,12 @@ static ngx_int_t ngx_http_hello_world_handler(ngx_http_request_t *r)
  * @return string
  *   Status of the configuration setup.
  */
-static char *ngx_http_hello_world(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
-{
+static char *ngx_http_protect_request(ngx_conf_t *cf, ngx_command_t *cmd, void *conf) {
     ngx_http_core_loc_conf_t *clcf; /* pointer to core location configuration */
 
     /* Install the hello world handler. */
     clcf = ngx_http_conf_get_module_loc_conf(cf, ngx_http_core_module);
-    clcf->handler = ngx_http_hello_world_handler;
+    clcf->handler = ngx_http_protect_request_handler;
 
     return NGX_CONF_OK;
 } /* ngx_http_hello_world */
