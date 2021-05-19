@@ -49,10 +49,10 @@ static ngx_int_t ngx_http_protect_request_handler(ngx_http_request_t *r);
 static ngx_command_t ngx_http_protect_request_commands[] = {
 
     { ngx_string("protect_request"), /* directive */
-      NGX_HTTP_LOC_CONF|NGX_CONF_NOARGS, /* location context and takes
+      NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1, /* location context and takes
                                             no arguments*/
       ngx_http_protect_request, /* configuration setup function */
-      0, /* No offset. Only one context is supported. */
+      NGX_HTTP_LOC_CONF_OFFSET, /* No offset. Only one context is supported. */
       0, /* No offset when storing the module configuration on struct. */
       NULL},
 
