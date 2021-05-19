@@ -101,33 +101,33 @@ ngx_module_t ngx_http_protect_request_module = {
  * @return
  *   The status of the response generation.
  */
-static ngx_int_t 
-ngx_http_protect_request_handler(ngx_http_request_t *r) 
-{
+// static ngx_int_t 
+// ngx_http_protect_request_handler(ngx_http_request_t *r) 
+// {
 
-    ngx_http_protect_request_conf_t  *arcf;
-    ngx_http_protect_request_ctx_t   *ctx;
+//     ngx_http_protect_request_conf_t  *arcf;
+//     ngx_http_protect_request_ctx_t   *ctx;
 
-    arcf = ngx_http_get_module_loc_conf(r, ngx_http_protect_request_module);
+//     arcf = ngx_http_get_module_loc_conf(r, ngx_http_protect_request_module);
 
-    // validate request
-    if (arcf->uri.len == 0) {
-        return NGX_DECLINED;
-    }
+//     // validate request
+//     if (arcf->uri.len == 0) {
+//         return NGX_DECLINED;
+//     }
 
-    ctx = ngx_http_get_module_ctx(r, ngx_http_protect_request_module);
+//     ctx = ngx_http_get_module_ctx(r, ngx_http_protect_request_module);
     
 
-    // add request header
+//     // add request header
      
-    // send request as proxy
+//     // send request as proxy
     
-    // process response
-    if (ctx->status >= NGX_HTTP_OK && ctx->status < NGX_HTTP_SPECIAL_RESPONSE) {
-        return NGX_OK;
-    }
-    return NGX_ERROR;
-} /* ngx_http_protect_request_handler */
+//     // process response
+//     if (ctx->status >= NGX_HTTP_OK && ctx->status < NGX_HTTP_SPECIAL_RESPONSE) {
+//         return NGX_OK;
+//     }
+//     return NGX_ERROR;
+// } /* ngx_http_protect_request_handler */
 
 /**
  * Configuration setup function that installs the content handler.
