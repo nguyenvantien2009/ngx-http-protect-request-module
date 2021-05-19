@@ -49,10 +49,9 @@ static char *ngx_http_protect_request(ngx_conf_t *cf, ngx_command_t *cmd, void *
 static ngx_command_t ngx_http_protect_request_commands[] = {
 
     { ngx_string("protect_request"), /* directive */
-      NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1, /* location context and takes
-                                            no arguments*/
+      NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1, 
       ngx_http_protect_request, /* configuration setup function */
-      NGX_HTTP_LOC_CONF_OFFSET, /* No offset. Only one context is supported. */
+      NGX_HTTP_LOC_CONF_OFFSET, 
       0, /* No offset when storing the module configuration on struct. */
       NULL},
 
@@ -144,20 +143,20 @@ ngx_module_t ngx_http_protect_request_module = {
 static char *ngx_http_protect_request(ngx_conf_t *cf, ngx_command_t *cmd, void *conf) 
 {
 
-    ngx_http_protect_request_conf_t *arcf = conf;
-    ngx_str_t   *value;
+    // ngx_http_protect_request_conf_t *arcf = conf;
+    // ngx_str_t   *value;
 
-    if (arcf->uri.data != NULL) {
-        return "is duplicate";
-    }
+    // if (arcf->uri.data != NULL) {
+    //     return "is duplicate";
+    // }
 
-    value = cf->args->elts;
-    if (ngx_strcmp(value[1].data, "off") == 0) {
-        arcf->uri.len = 0;
-        arcf->uri.data = (u_char *) "";
-        return NGX_CONF_OK;
-    }
-    arcf->uri = value[1];
+    // value = cf->args->elts;
+    // if (ngx_strcmp(value[1].data, "off") == 0) {
+    //     arcf->uri.len = 0;
+    //     arcf->uri.data = (u_char *) "";
+    //     return NGX_CONF_OK;
+    // }
+    // arcf->uri = value[1];
 
     return NGX_CONF_ERROR;
 } /* ngx_http_hello_world */
