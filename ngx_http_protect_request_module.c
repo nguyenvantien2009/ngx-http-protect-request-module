@@ -31,6 +31,14 @@
 
 // #define HELLO_WORLD "hello world\r\n"
 
+typedef struct {
+    ngx_str_t                 uri;
+} ngx_http_protect_request_conf_t;
+
+typedef struct {
+    ngx_uint_t                status;
+} ngx_http_protect_request_ctx_t;
+
 static char *ngx_http_protect_request(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
 static ngx_int_t ngx_http_protect_request_handler(ngx_http_request_t *r);
 
@@ -96,6 +104,7 @@ ngx_module_t ngx_http_protect_request_module = {
 static ngx_int_t ngx_http_protect_request_handler(ngx_http_request_t *r) {
 
     ngx_http_protect_request_conf_t  *arcf;
+    ngx_http_protect_request_ctx_t   *ctx;
 
     arcf = ngx_http_get_module_loc_conf(r, ngx_http_protect_request_module);
 
@@ -159,6 +168,7 @@ static ngx_int_t ngx_http_protect_request_handler(ngx_http_request_t *r) {
  *   Status of the configuration setup.
  */
 static char *ngx_http_protect_request(ngx_conf_t *cf, ngx_command_t *cmd, void *conf) {
+
     ngx_http_core_loc_conf_t *clcf; /* pointer to core location configuration */
 
     /* Install the hello world handler. */
