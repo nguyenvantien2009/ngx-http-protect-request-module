@@ -29,9 +29,9 @@
 #include <ngx_http.h>
 
 
-#define HELLO_WORLD "hello world\r\n"
+// #define HELLO_WORLD "hello world\r\n"
 
-static char *ngx_http_hello_world(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
+static char *ngx_http_protect_request(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
 static ngx_int_t ngx_http_protect_request_handler(ngx_http_request_t *r);
 
 /**
