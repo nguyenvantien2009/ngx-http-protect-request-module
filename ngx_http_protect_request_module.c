@@ -144,11 +144,20 @@ ngx_http_protect_request_handler(ngx_http_request_t *r)
 static char *ngx_http_protect_request(ngx_conf_t *cf, ngx_command_t *cmd, void *conf) 
 {
 
-    ngx_http_core_loc_conf_t *clcf; /* pointer to core location configuration */
+    ngx_http_protect_request_conf_t *arcf = conf;
+    ngx_str_t   *value;
 
-    /* Install the hello world handler. */
-    clcf = ngx_http_conf_get_module_loc_conf(cf, ngx_http_core_module);
-    clcf->handler = ngx_http_protect_request_handler;
+    if (arcf->uri.data != NULL) {
+        return "is duplicate";
+    }
+
+    value = cf->args->elts;
+    if (ngx_strcmp(value[1].data, "off") == 0) {
+        arcf->uri.len = 0;
+        arcf->uri.data = (u_char *) "";
+        return NGX_CONF_OK;
+    }
+    arcf->uri = value[1];
 
     return NGX_CONF_OK;
 } /* ngx_http_hello_world */
