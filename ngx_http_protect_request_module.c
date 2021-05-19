@@ -126,7 +126,7 @@ ngx_http_protect_request_handler(ngx_http_request_t *r)
     if (ctx->status >= NGX_HTTP_OK && ctx->status < NGX_HTTP_SPECIAL_RESPONSE) {
         return NGX_OK;
     }
-    return NGX_DECLINED;
+    return NGX_ERROR;
 } /* ngx_http_protect_request_handler */
 
 /**
